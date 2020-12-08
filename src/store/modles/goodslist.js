@@ -2,24 +2,35 @@ import {xiosget,xiospost} from '../../axios/index';
 
 let state = {
     goodsarr:[],
+    goodscont:null,
 }
 
 let mutations = {
     gooslist(state,res){
         state.goodsarr = res
+    },
+    goodslistcont(state,res){
+        state.goodscont = Math.ceil(res/3)*10
     }
 }
 
 let actions = {
-    reqgoodslist(context){
+    reqgoodslist(context,e){
         xiosget({
             url:'/api/goodslist',
             params:{
-                size:5,
-                page:1,
+                size:3,
+                page:e,
             }
         }).then(res=>{
             context.commit('gooslist',res.data.list);
+        })
+    },
+    reqgoodslistcont(context){
+        xiosget({
+            url:'/api/goodscount',
+        }).then(res=>{
+            context.commit('goodslistcont',res.data.list[0].total)
         })
     }
 }
@@ -27,6 +38,9 @@ let actions = {
 let getters = {
     goodsarr(state){
         return state.goodsarr;
+    },
+    goodscont(state){
+        return state.goodscont
     }
 }
 

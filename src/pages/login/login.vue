@@ -3,19 +3,37 @@
     <div class="warp">
        
             <h3>登录</h3>
-            <p><input type="text" placeholder="请输入用户名"></p>
-            <p><input type="password" placeholder="请输入密码"></p>
+            <p><input type="text" v-model="user.username" placeholder="请输入用户名"></p>
+            <p><input type="password" v-model="user.password" placeholder="请输入密码"></p>
             <p><button @click="change">登录</button></p>
     </div>
 </div>
 </template>
 <script>
 export default {
+    data() {
+        return {
+            user:{
+                username:"",
+                password:"",
+            }
+        }
+    },
 components:{
 },
 methods:{
     change(){
-        this.$router.push('/index')
+        this.xiospost({
+            url:'/api/userlogin',
+            data:this.user
+        }).then(res=>{
+            if(res.data.code==200){
+                this.$router.push('/index')
+                sessionStorage.setItem('obj',JSON.stringify(res.data.list));
+            }else{
+                alert(res.data.msg)
+            }
+        })
     }
 }
 }

@@ -131,7 +131,8 @@ import qs from "qs";
 export default {
   computed: {
     ...mapGetters({
-        
+      classarr: "classlist/classarr",
+      specarr: "speclist/specarr",
     }),
   },
   props: ["title"],
@@ -160,7 +161,10 @@ export default {
   },
   methods: {
     ...mapActions({
-       reqgoodslist:"goodslist/reqgoodslist",
+    reqclassify: "classlist/reqclassify",
+    reqspeclist: "speclist/reqspeclist",
+    reqgoodslist: "goodslist/reqgoodslist",
+    reqgoodslistcont: "goodslist/reqgoodslistcont",
     }),
     // 初始化
     empty() {
@@ -191,7 +195,8 @@ export default {
         data: arr,
       }).then((res) => {
         this.title.msg = false;
-        this.reqgoodslist();
+        this.reqgoodslist(1);
+        this.reqgoodslistcont();
       });
     },
     edit(id) {
@@ -207,7 +212,6 @@ export default {
         this.form.id = id;
         this.changesele(this.form.first_cateid);
         this.changespecSele(this.form.specsid);
-        console.log(this.form);
       });
     },
     //修改数据
@@ -221,7 +225,8 @@ export default {
         data: arr,
       }).then((res) => {
         this.title.msg = false;
-         this.reqgoodslist();
+        this.reqgoodslist(1);
+        this.reqgoodslistcont();
       });
     },
     // 图片上传时

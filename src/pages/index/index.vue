@@ -10,7 +10,7 @@
           active-text-color="#ffd04b"
           :router="true"
         >
-          <el-menu-item index="2" id="ele-box">
+          <el-menu-item index="/index" id="ele-box">
             <i class="el-icon-menu"></i>
             <span slot="title">首页</span>
           </el-menu-item>
@@ -56,10 +56,16 @@
         </el-menu>
       </el-aside>
       <el-container>
-        <el-header> banner </el-header>
+        <el-header> 
+          
+          <div class="fr">
+            <span>{{msg}}</span>
+            <el-button @click="quit">退出</el-button>
+          </div>
+          </el-header>
         <el-main>
           <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+            <el-breadcrumb-item >首页</el-breadcrumb-item>
             <el-breadcrumb-item>{{$router.history.current.name}}</el-breadcrumb-item>
           </el-breadcrumb>
           <router-view></router-view>
@@ -71,8 +77,19 @@
 <script>
 export default {
   components: {},
+  data(){
+    return {
+      msg:JSON.parse(sessionStorage.getItem('obj')).username
+    }
+  },
   mounted(){
      
+  },
+  methods:{
+    quit(){
+      sessionStorage.setItem('obj',JSON.stringify({}));
+      this.$router.push('/login');
+    }
   }
 };
 </script>
