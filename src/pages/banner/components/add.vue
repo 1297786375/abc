@@ -1,19 +1,12 @@
 <template>
   <div>
     <el-dialog
-      :title="title.flag ? '商品分类添加' : '商品分类修改'"
+      :title="title.flag ? '轮播图添加' : '轮播图删除'"
       :visible.sync="title.msg"
     >
       <el-form>
-        <el-form-item label="上级分类:" :label-width="formLabelWidth">
-          <el-select v-model="form.pid" placeholder="--请选择--">
-            <el-option :label="'顶级分类'" :value="1"></el-option>  
-            <el-option v-for="item in classarr" :key="item.id" :label="item.catename" :value="item.id">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="分类名称:" :label-width="formLabelWidth">
-          <el-input v-model="form.catename" autocomplete="off"></el-input>
+        <el-form-item label="标题:" :label-width="formLabelWidth">
+          <el-input v-model="form.title" autocomplete="off"></el-input>
         </el-form-item>
         <!-- 图片 -->
         <el-form-item label="图片:" :label-width="formLabelWidth" v-if="form.pid!=1">
@@ -58,17 +51,13 @@ import { mapActions, mapGetters } from "vuex";
 import qs from "qs";
 export default {
   computed:{
-      ...mapGetters({
-        classarr: "classlist/classarr",
-      })
   },
   props: ["title"],
   data() {
     return {
       isShow: true,
       form: {
-        pid: "",
-        catename: "",
+        title:"",
         img: null,
         status: 1,
       },
@@ -78,13 +67,12 @@ export default {
   },
   methods: {
      ...mapActions({
-       reqclassify: "classlist/reqclassify",
+      reqbannerlist:"banner/reqbannerlist"
     }),
     // 初始化
     empty() {
       this.form={
-        pid: "",
-        catename: "",
+        title:"",
         img: null,
         status: 1,
       };  
@@ -97,17 +85,16 @@ export default {
         arr.append(i, this.form[i]);
       }
       xiospost({
-        url: "/api/cateadd",
+        url: "/api/banneradd",
         data: arr,
       }).then((res) => {
-        console.log(res);
         this.title.msg = false;
-        this.reqclassify();
+        this.reqbannerlist();
       });
     },
     edit(id) {
       this.xiosget({
-        url: "/api/cateinfo",
+        url: "/api/bannerinfo",
         params: {
           id: id,
         },
@@ -125,11 +112,11 @@ export default {
         arr.append(i, this.form[i]);
       }
       this.xiospost({
-        url: "/api/cateedit",
+        url: "/api/banneredit",
         data: arr,
       }).then((res) => {
         this.title.msg = false;
-        this.reqclassify();
+        this.reqbannerlist();
       });
     },
     changeimg(e){

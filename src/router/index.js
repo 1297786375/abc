@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-
+import {store} from '../store/index.js'
 
 const index = ()=>import('../pages/index/index');
 const admin = ()=>import('../pages/admin/admin');
@@ -63,12 +63,11 @@ export const indexRouter = [
     name:'秒杀活动'
   }
 ]
-
-export default new Router({
+let router = new Router({
   routes: [
     {
-      path:'/',
-      component:login,
+      path:'*',
+      redirect:'/login',
     },
     {
       path:'/login',
@@ -94,3 +93,15 @@ export default new Router({
     }
   ]
 })
+router.beforeEach((to, from, next) => {
+  //当进入的模块为login时
+  if(to.path=="/login"){
+    next();
+  }
+  if(store.state.user.list.id){
+    next();
+  }
+  console.log(store.state.user.list.id);
+})
+console.log(store);
+export default router

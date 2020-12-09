@@ -133,7 +133,6 @@ export default {
       });
     },
     changeimg(e){
-      console.log(e);
       let file = e.raw
       this.imageUrl = URL.createObjectURL(file);
       this.form.img = file;

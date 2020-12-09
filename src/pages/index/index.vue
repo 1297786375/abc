@@ -15,18 +15,16 @@
             <span slot="title">首页</span>
           </el-menu-item>
 
-          <el-submenu index="1">
+          <el-submenu :index="item.title" v-for="item in list.menus" :key="item.id">
             <template slot="title">
-              <i class="el-icon-s-tools"></i>
-              <span>系统设置</span>
+              <i :class="item.icon"></i>
+              <span>{{item.title}}</span>
             </template>
-            <el-menu-item-group>
-              <el-menu-item index="/index/menu">菜单管理</el-menu-item>
-              <el-menu-item index="/index/role">角色管理</el-menu-item>
-              <el-menu-item index="/index/admin">管理员管理</el-menu-item>
+            <el-menu-item-group v-for="i in item.children" :key="i.id">
+              <el-menu-item :index="'/index'+i.url">{{i.title}}</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
-
+<!-- 
           <el-submenu index="3">
             <template slot="title">
               <i class="el-icon-location"></i>
@@ -52,7 +50,7 @@
                 >秒杀活动</el-menu-item
               >
             </el-menu-item-group>
-          </el-submenu>
+          </el-submenu> -->
         </el-menu>
       </el-aside>
       <el-container>
@@ -75,19 +73,24 @@
   </div>
 </template>
 <script>
+import {mapActions} from 'vuex'
 export default {
   components: {},
   data(){
     return {
-      msg:JSON.parse(sessionStorage.getItem('obj')).username
+      msg:JSON.parse(sessionStorage.getItem('obj')).username,
+      list:JSON.parse(sessionStorage.getItem('obj'))
     }
   },
   mounted(){
-     
+     console.log(this.list);
   },
   methods:{
+    ...mapActions({
+      reqlistarr:"user/reqlistarr"
+    }),
     quit(){
-      sessionStorage.setItem('obj',JSON.stringify({}));
+      this.reqlistarr({});
       this.$router.push('/login');
     }
   }

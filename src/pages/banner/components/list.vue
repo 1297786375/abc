@@ -1,16 +1,16 @@
 <template>
   <div class="box">
     <el-table
-      :data="classarr"
+      :data="bannerarr"
       style="width: 100%; margin-bottom: 20px"
       row-key="id"
       border
       default-expand-all
       :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
     >
-      <el-table-column prop="pid" label="分类编号" width="180">
+      <el-table-column prop="id" label="编号" width="180">
       </el-table-column>
-      <el-table-column prop="catename" label="分类名称" width="180">
+      <el-table-column prop="title" label="轮播图标题" width="180">
       </el-table-column>
       <el-table-column label="图片" >
         <template slot-scope="scope">
@@ -43,7 +43,7 @@ import { mapActions, mapGetters } from "vuex";
 export default {
   computed: {
     ...mapGetters({
-      classarr: "classlist/classarr",
+      bannerarr:"banner/bannerarr"
     }),
   },
   methods: {
@@ -51,19 +51,19 @@ export default {
       this.form.img = file.url;
     },
     ...mapActions({
-      reqclassify: "classlist/reqclassify",
+      reqbannerlist:"banner/reqbannerlist"
     }),
     handleEdit(e) {
       this.$emit("edit", e);
     },
     handleDelete(id) {
       this.xiospost({
-        url: "/api/catedelete",
+        url: "/api/bannerdelete",
         data: {
           id: id,
         },
       }).then((res) => {
-     this.reqclassify();
+        this.reqbannerlist();
       });
     },
   },
@@ -76,8 +76,7 @@ export default {
     };
   },
   mounted() {
-    this.reqclassify();
-    console.log(this.classarr);
+    this.reqbannerlist();
   },
 };
 </script>

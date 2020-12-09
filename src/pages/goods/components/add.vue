@@ -3,6 +3,7 @@
     <el-dialog
       :title="title.flag ? '商品添加' : '商品修改'"
       :visible.sync="title.msg"
+      @opened="changetran"
     >
       <el-form>
         <!-- 一级分类 -->
@@ -110,8 +111,8 @@
           >
           </el-switch>
         </el-form-item>
-        <el-form-item label="活动形式">
-          <el-input type="textarea" v-model="form.description"></el-input>
+        <el-form-item label="活动形式" :label-width="formLabelWidth">
+          <div id="div1"></div>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -127,6 +128,7 @@
 <script>
 import { xiosget, xiospost } from "../../../axios/index";
 import { mapActions, mapGetters } from "vuex";
+import E from 'wangeditor'
 import qs from "qs";
 export default {
   computed: {
@@ -184,8 +186,16 @@ export default {
       };
       this.imageUrl = "";
     },
+    // 当弹窗弹出之后
+    changetran(){
+      console.log(111);
+      this.editor = new E('#div1');
+      this.editor.create()
+      this.editor.txt.html(this.form.description);
+    },
     //添加
     add() {
+      this.form.description = this.editor.txt.html();
       var arr = new FormData();
       for (var i in this.form) {
         arr.append(i, this.form[i]);
@@ -210,12 +220,14 @@ export default {
         this.form = res.data.list;
         this.imageUrl = `/api${this.form.img}`;
         this.form.id = id;
+        this.form.specsattr = this.form.specsattr.split(',');
         this.changesele(this.form.first_cateid);
         this.changespecSele(this.form.specsid);
       });
     },
     //修改数据
     edits() {
+      this.form.description = this.editor.txt.html();
       var arr = new FormData();
       for (var i in this.form) {
         arr.append(i, this.form[i]);
@@ -225,8 +237,6 @@ export default {
         data: arr,
       }).then((res) => {
         this.title.msg = false;
-        this.reqgoodslist(1);
-        this.reqgoodslistcont();
       });
     },
     // 图片上传时
@@ -249,14 +259,13 @@ export default {
     },
     // 获取商品规格属性
     changespecSele(e) {
-      console.log(e);
+      // this.form.specsattr = [];
       this.xiosget({
         url: "/api/specsinfo",
         params: {
           id: e,
         },
       }).then((res) => {
-        console.log(res);
         this.arrspec = res.data.list[0].attrs;
         this.arrspec = this.arrspec.map((item) => {
           return item
