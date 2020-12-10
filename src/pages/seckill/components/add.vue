@@ -16,6 +16,8 @@
             start-placeholder="开始日期"
             end-placeholder="结束日期"
             @change="changedata"
+            format="yyyy 年 MM 月 dd 日"
+            value-format="yyyy-MM-dd"
           >
           </el-date-picker
         ></el-form-item>
@@ -125,6 +127,7 @@ export default {
     changedata(e){
       this.form.begintime = e[0];
       this.form.endtime = e[1];
+      console.log(e);
     },
     //添加
     add() {
@@ -137,6 +140,7 @@ export default {
       });
     },
     edit(id) {
+      this.dataarr = [];
       this.xiosget({
         url: "/api/seckinfo",
         params: {
@@ -147,10 +151,8 @@ export default {
         this.form.id = id;
         this.changesele(this.form.first_cateid);
         this.changegoods(this.form.second_cateid);
-        this.dataarr[0] = this.form.begintime;
-        this.dataarr[1] = this.form.endtime;
-        console.log(this.dataarr);
-        console.log(this.form);
+        this.dataarr.push(this.form.begintime)
+        this.dataarr.push(this.form.endtime)
       });
     },
     //修改数据
